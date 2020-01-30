@@ -20,7 +20,7 @@ import { ProductoEntity } from './producto/producto.entity';
         username: 'root',
         password: '1234',
         database: 'clienteProductoBano',
-        dropSchema: true,
+        dropSchema: false,
         entities: [
           ProductoEntity,
           ClienteEntity,

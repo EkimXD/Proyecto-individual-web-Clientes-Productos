@@ -47,9 +47,10 @@ export class ClienteEntity {
 
     @Column({
         type:'varchar',
-        nullable:true,
-        name:'correo_cliente',
-        comment:'Correo electronico del cliente'
+        nullable:false,
+        name:'correo',
+        comment:'Correo electronico del cliente',
+        unique:true
     })
     correo:string;
 
@@ -69,9 +70,18 @@ export class ClienteEntity {
     })
     observacion:string;
 
+    @Column({
+        type:'varchar',
+        nullable:false,
+        name:'contrasena_cliente',
+        comment:'Contrasena del cliente'
+    })
+    contrasena:string;
+
     @OneToMany(
         type=>ProductoEntity,
         producto=>producto.cliente
     )
     producto:ProductoEntity[]
+
 }
