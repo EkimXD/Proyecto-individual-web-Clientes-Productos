@@ -22,7 +22,7 @@ export class UsuarioCreateDto {
 
     telefono?: string;
 
-    @IsDateString()
+    // @IsDateString()
     fecha_nac?: string;
 
     @IsNotEmpty()

@@ -1,5 +1,6 @@
-import {Column, Entity, Index, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+import { Column, Entity, Index, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import {ClienteEntity} from "../cliente/cliente.entity";
+import { DetCarritoEntity } from '../det_carrito/det-carrito.entity';
 
 @Entity('productos_bano')
 export class ProductoEntity {
@@ -44,4 +45,10 @@ export class ProductoEntity {
         cliente=>cliente.producto
     )
     cliente:ClienteEntity
+
+    @OneToMany(
+      type => DetCarritoEntity,
+      detalle=>detalle.producto
+    )
+    detalle:DetCarritoEntity[];
 }

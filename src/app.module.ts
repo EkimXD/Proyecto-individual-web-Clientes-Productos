@@ -10,6 +10,10 @@ import { UsuarioModule } from './usuario/usuario.module';
 import { UsuarioEntity } from './usuario/usuario.entity';
 import { RolModule } from './rol/rol.module';
 import { RolEntity } from './rol/rol.entity';
+import { CabCarritoEntity } from './cab_carrito/cab-carrito.entity';
+import { CabCarritoModule } from './cab_carrito/cab-carrito.module';
+import { DetCarritoModule } from './det_carrito/det-carrito.module';
+import { DetCarritoEntity } from './det_carrito/det-carrito.entity';
 
 @Module({
   imports: [
@@ -17,6 +21,8 @@ import { RolEntity } from './rol/rol.entity';
     ProductoModule,
     UsuarioModule,
     RolModule,
+    CabCarritoModule,
+    DetCarritoModule,
     TypeOrmModule.forRoot(
       {
         name: 'default', // Nombre cadena de Conex.
@@ -26,12 +32,14 @@ import { RolEntity } from './rol/rol.entity';
         username: 'root',
         password: '1234',
         database: 'clienteProductoBano',
-        dropSchema: false,
+        dropSchema: true,
         entities: [
           ProductoEntity,
           ClienteEntity,
           UsuarioEntity,
           RolEntity,
+          CabCarritoEntity,
+          DetCarritoEntity,
         ],
         synchronize: true, // Crear -> true , Conectar -> false
       },
