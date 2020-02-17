@@ -6,11 +6,17 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductoModule } from './producto/producto.module';
 import { ClienteEntity } from './cliente/cliente.entity';
 import { ProductoEntity } from './producto/producto.entity';
+import { UsuarioModule } from './usuario/usuario.module';
+import { UsuarioEntity } from './usuario/usuario.entity';
+import { RolModule } from './rol/rol.module';
+import { RolEntity } from './rol/rol.entity';
 
 @Module({
   imports: [
     ClienteModule,
     ProductoModule,
+    UsuarioModule,
+    RolModule,
     TypeOrmModule.forRoot(
       {
         name: 'default', // Nombre cadena de Conex.
@@ -24,6 +30,8 @@ import { ProductoEntity } from './producto/producto.entity';
         entities: [
           ProductoEntity,
           ClienteEntity,
+          UsuarioEntity,
+          RolEntity,
         ],
         synchronize: true, // Crear -> true , Conectar -> false
       },

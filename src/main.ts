@@ -10,7 +10,7 @@ async function bootstrap() {
   app.use(
     session({
       name: 'server-session-id',
-      secret: 'No sera de tomar un traguito',
+      secret: 'la poderosa lola',
       resave: true,
       saveUninitialized: true,
       cookie: {secure: false},
