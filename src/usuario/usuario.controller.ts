@@ -27,22 +27,7 @@ export class UsuarioController {
   ) {
   }
 
-  @Get('rutas/crear-usuario')
-  async rutaCrearUsuarios(
-    @Query('error') error: string,
-    @Res() res,
-  ) {
-    res.render(
-      'usuario/rutas/crear-usuario',
-      {
-        datos: {
-          error,
-        },
-      },
-    );
-  }
-
-  @Get('callme')
+  @Get('sayhey')
   async sayName() {
     return 'usuario';
   }

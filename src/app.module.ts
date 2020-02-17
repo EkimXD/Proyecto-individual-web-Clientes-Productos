@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ClienteModule } from './cliente/cliente.module';
+import { ProveedorModule } from './proveedor/proveedor.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductoModule } from './producto/producto.module';
-import { ClienteEntity } from './cliente/cliente.entity';
+import { ProveedorEntity } from './proveedor/proveedor.entity';
 import { ProductoEntity } from './producto/producto.entity';
 import { UsuarioModule } from './usuario/usuario.module';
 import { UsuarioEntity } from './usuario/usuario.entity';
@@ -17,7 +17,7 @@ import { DetCarritoEntity } from './det_carrito/det-carrito.entity';
 
 @Module({
   imports: [
-    ClienteModule,
+    ProveedorModule,
     ProductoModule,
     UsuarioModule,
     RolModule,
@@ -35,7 +35,7 @@ import { DetCarritoEntity } from './det_carrito/det-carrito.entity';
         dropSchema: true,
         entities: [
           ProductoEntity,
-          ClienteEntity,
+          ProveedorEntity,
           UsuarioEntity,
           RolEntity,
           CabCarritoEntity,

@@ -1,21 +1,21 @@
 import {Injectable} from "@nestjs/common";
 import {InjectRepository} from "@nestjs/typeorm";
-import {ClienteEntity} from "./cliente.entity";
+import {ProveedorEntity} from "./proveedor.entity";
 import {DeleteResult, Like, MoreThan, Repository} from "typeorm";
 
 @Injectable()
-export class ClienteService {
+export class ProveedorService {
     constructor(
-        @InjectRepository(ClienteEntity) // Inyectar Dependencias
-        private _repositorioCliente: Repository<ClienteEntity>
+        @InjectRepository(ProveedorEntity) // Inyectar Dependencias
+        private _repositorioCliente: Repository<ProveedorEntity>
     ) {}
 
-    encontrarUno(id: number): Promise<ClienteEntity | undefined> {
+    encontrarUno(id: number): Promise<ProveedorEntity | undefined> {
         return this._repositorioCliente
             .findOne(id);
     }
 
-    crearUno(usuario: ClienteEntity) {
+    crearUno(usuario: ProveedorEntity) {
         return this._repositorioCliente
             .save(usuario);
     }
@@ -27,8 +27,8 @@ export class ClienteService {
 
     actualizarUno(
         id: number,
-        usuario: ClienteEntity
-    ): Promise<ClienteEntity> {
+        usuario: ProveedorEntity
+    ): Promise<ProveedorEntity> {
         usuario.id = id;
         return this._repositorioCliente
             .save(usuario); // UPSERT
@@ -42,7 +42,7 @@ export class ClienteService {
             id: 'DESC',
             nombre: 'ASC'
         }
-    ): Promise<ClienteEntity[]> {
+    ): Promise<ProveedorEntity[]> {
 
         // Exactamente el nombre o Exactamente la cedula
         const consultaWhere = [

@@ -14,7 +14,7 @@ export class RolController {
     ) {}
 
 
-    @Get('callme')
+    @Get('sayhey')
     sayName(){
         return 'rol'
     }

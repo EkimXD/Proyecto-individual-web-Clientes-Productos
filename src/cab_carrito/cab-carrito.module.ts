@@ -29,5 +29,4 @@ import { CabCarritoService } from './cab-carrito.service';
 })
 
 export class CabCarritoModule {
-
 }

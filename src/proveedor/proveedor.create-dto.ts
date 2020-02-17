@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty, IsNumber, IsNumberString, IsPhoneNumber, Length, MaxLength, MinLength } from 'class-validator';
 
-export class ClienteCreateDto{
+export class ProveedorCreateDto{
 
   @IsNotEmpty()
   @MinLength(10)

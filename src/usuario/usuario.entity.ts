@@ -89,6 +89,7 @@ export class UsuarioEntity {
   })
   contrasena?: string;
 
+
   @ManyToMany(
     type => RolEntity,
     rol => rol.usuario,

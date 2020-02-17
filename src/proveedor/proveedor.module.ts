@@ -1,29 +1,29 @@
 import { Module } from '@nestjs/common';
-import { ClienteEntity } from './cliente.entity';
+import { ProveedorEntity } from './proveedor.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ClienteController } from './cliente.controller';
-import { ClienteService } from './cliente.service';
+import { ProveedorController } from './proveedor.controller';
+import { ProveedorService } from './proveedor.service';
 
 @Module({
   imports: [
     TypeOrmModule
       .forFeature([
-          ClienteEntity, // Entidades a usarse dentro
+          ProveedorEntity, // Entidades a usarse dentro
                         // del modulo.
         ],
         'default', // Nombre de la cadena de conex.
       ),
   ],
   controllers: [
-    ClienteController,
+    ProveedorController,
   ],
   providers: [
-    ClienteService,
+    ProveedorService,
   ],
   exports: [
-    ClienteService,
+    ProveedorService,
   ],
 })
-export class ClienteModule {
+export class ProveedorModule {
 
 }

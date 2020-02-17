@@ -1,5 +1,5 @@
 import { Column, Entity, Index, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import {ClienteEntity} from "../cliente/cliente.entity";
+import {ProveedorEntity} from "../proveedor/proveedor.entity";
 import { DetCarritoEntity } from '../det_carrito/det-carrito.entity';
 
 @Entity('productos_bano')
@@ -41,10 +41,10 @@ export class ProductoEntity {
     costo:number;
 
     @ManyToOne(
-        type => ClienteEntity,
+        type => ProveedorEntity,
         cliente=>cliente.producto
     )
-    cliente:ClienteEntity
+    cliente:ProveedorEntity
 
     @OneToMany(
       type => DetCarritoEntity,

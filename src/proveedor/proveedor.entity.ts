@@ -1,14 +1,14 @@
 import {Column, Entity, Index, ManyToOne, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
 import { ProductoEntity } from '../producto/producto.entity';
 
-@Entity('cliente')
-export class ClienteEntity {
+@Entity('proveedor')
+export class ProveedorEntity {
 
     @PrimaryGeneratedColumn({
         type:'int',
         unsigned:true,
         name:'id_cliente',
-        comment:'identificador de la tabla cliente'
+        comment:'identificador de la tabla proveedor'
     })
     id:number;
 
@@ -19,7 +19,7 @@ export class ClienteEntity {
         type:'varchar',
         nullable:false,
         name:'numero_cedula_cliente',
-        comment:'Numero de cedula del cliente'
+        comment:'Numero de cedula del proveedor'
     })
     numeroCedula:string;
 
@@ -30,7 +30,7 @@ export class ClienteEntity {
         type:'varchar',
         nullable:false,
         name:'nombre_cliente',
-        comment:'Nombre del cliente'
+        comment:'Nombre del proveedor'
     })
     nombre:string;
 
@@ -41,7 +41,7 @@ export class ClienteEntity {
         type:'varchar',
         nullable:false,
         name:'apellido_cliente',
-        comment:'Apellido del cliente'
+        comment:'Apellido del proveedor'
     })
     apellido:string;
 
@@ -49,7 +49,7 @@ export class ClienteEntity {
         type:'varchar',
         nullable:false,
         name:'correo',
-        comment:'Correo electronico del cliente',
+        comment:'Correo electronico del proveedor',
         unique:true
     })
     correo:string;
@@ -58,7 +58,7 @@ export class ClienteEntity {
         type:'varchar',
         nullable:true,
         name:'telefono_cliente',
-        comment:'Correo electronico del cliente'
+        comment:'Correo electronico del proveedor'
     })
     telefono:string;
 
@@ -66,7 +66,7 @@ export class ClienteEntity {
         type:'varchar',
         nullable:true,
         name:'observacion_cliente',
-        comment:'Observacion acerca del cliente'
+        comment:'Observacion acerca del proveedor'
     })
     observacion:string;
 
@@ -74,7 +74,7 @@ export class ClienteEntity {
         type:'varchar',
         nullable:false,
         name:'contrasena_cliente',
-        comment:'Contrasena del cliente'
+        comment:'Contrasena del proveedor'
     })
     contrasena:string;
 
