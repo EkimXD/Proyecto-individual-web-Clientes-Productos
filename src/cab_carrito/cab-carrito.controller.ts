@@ -103,7 +103,7 @@ export class CabCarritoController {
   ): Promise<CabCarritoEntity[]> {
     if (session.usuario !== undefined) {
       const id: number = session.usuario.id_usuario;
-      return this._cabCarritoService.buscar({ usuario: id }, 0, 10, { fecha: 'DESC' });
+      return this._cabCarritoService.buscar({ usuario: id },[], 0, 10, { fecha: 'DESC' });
     } else {
       throw new BadRequestException('No existe una sesion activa');
     }
@@ -122,7 +122,7 @@ export class CabCarritoController {
       });
       if (ban) {
         const id: number = session.usuario.id_usuario;
-        return this._cabCarritoService.buscar({ usuario: id }, 0, 10, { fecha: 'DESC' });
+        return this._cabCarritoService.buscar({ usuario: id }, [],0, 10, { fecha: 'DESC' });
       } else {
         throw new BadRequestException('No posee permisos para realizar esta accion');
       }

@@ -37,11 +37,11 @@ export class DetCarritoService {
 
   buscar(
     where: any = {},
+    relations:any=[],
     skip: number = 0,
     take: number = 10,
     order: any = {
-      id: 'DESC',
-      nombre: 'ASC'
+      id: 'DESC'
     }
   ): Promise<DetCarritoEntity[]> {
     return this._detCarritoEntity
@@ -50,6 +50,7 @@ export class DetCarritoService {
         skip: skip,
         take: take,
         order: order,
+        relations,
       });
   }
 }
