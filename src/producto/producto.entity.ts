@@ -44,7 +44,7 @@ export class ProductoEntity {
         type => ProveedorEntity,
         cliente=>cliente.producto
     )
-    cliente:ProveedorEntity
+    proveedor:ProveedorEntity
 
     @OneToMany(
       type => DetCarritoEntity,

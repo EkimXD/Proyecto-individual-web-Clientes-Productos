@@ -12,6 +12,7 @@ import { ProductoService } from './producto.service';
     TypeOrmModule
       .forFeature([
           ProductoEntity, // Entidades a usarse dentro
+          ProveedorEntity, // Entidades a usarse dentro
           // del modulo.
         ],
         'default', // Nombre de la cadena de conex.
@@ -22,6 +23,7 @@ import { ProductoService } from './producto.service';
   ],
   providers: [
     ProductoService,
+    ProveedorService,
   ],
   exports: [
     ProductoService,

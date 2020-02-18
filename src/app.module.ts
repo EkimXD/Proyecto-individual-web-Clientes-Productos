@@ -32,7 +32,7 @@ import { DetCarritoEntity } from './det_carrito/det-carrito.entity';
         username: 'root',
         password: '1234',
         database: 'clienteProductoBano',
-        dropSchema: false,
+        dropSchema: true,
         entities: [
           ProductoEntity,
           ProveedorEntity,

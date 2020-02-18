@@ -61,7 +61,7 @@ export class ProveedorEntity {
 
     @OneToMany(
         type=>ProductoEntity,
-        producto=>producto.cliente
+        producto=>producto.proveedor
     )
     producto:ProductoEntity[]
 
