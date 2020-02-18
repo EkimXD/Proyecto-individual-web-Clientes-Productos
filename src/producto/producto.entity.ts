@@ -33,7 +33,7 @@ export class ProductoEntity {
     descripcion:string;
 
     @Column({
-        type:'decimal',
+        type:'double',
         nullable:false,
         name:'costo_producto',
         comment:'Costo del producto de bano'
