@@ -5,35 +5,37 @@ import { CabCarritoCreateDto } from './cab-carrito.create-dto';
 import { validate } from 'class-validator';
 import { DeleteResult } from 'typeorm';
 import { errorComparator } from 'tslint/lib/verify/lintError';
+import { DetCarritoService } from '../det_carrito/det-carrito.service';
 
 @Controller('cab-carrito')
 export class CabCarritoController {
   constructor(
     private readonly _cabCarritoService: CabCarritoService,
+    private readonly _detCarritoService: DetCarritoService,
   ) {
   }
 
   @Get('sayhey')
-  sayhey() {
+  async sayhey() {
     return 'cab-carrito';
   }
 
   @Post()
   async crearCab(
-    @Body("direccion") direccion: string,
+    @Body('direccion') direccion: string,
     @Session() session,
-  ):Promise<CabCarritoEntity> {
+  ): Promise<CabCarritoEntity> {
     if (session.usuario !== undefined) {
-      let cabecera=this.generarCabecera();
-      cabecera.direccion=direccion;
+      let cabecera = this.generarCabecera();
+      cabecera.direccion = direccion;
       const validacion = await validate(this.carritoDTO(cabecera));
       if (validacion.length === 0) {
-        cabecera.usuario=session.usuario.id_usuario;
+        cabecera.usuario = session.usuario.id_usuario;
         return this._cabCarritoService.crearUno(cabecera);
       } else {
         throw new BadRequestException('Error en validacion');
       }
-    }else{
+    } else {
       throw new BadRequestException('No existe sesion activa');
     }
   }
@@ -65,26 +67,26 @@ export class CabCarritoController {
   }
 
   @Post(':id')
-  async editarCabecera(
+  async editarDireccionCabecera(
     @Param('id') id: string,
-    @Body() cabecera: CabCarritoEntity,
+    @Body('direccion') direccion: string,
     @Session() session,
   ): Promise<CabCarritoEntity | void> {
-    //todo pendiente por editar!!!
     if (session.usuario !== undefined) {
       return this.esPropietario(id, session)
         .then(
           async bandera => {
             if (bandera) {
-              const validacion = await validate(this.carritoDTO(cabecera));
-              if (validacion.length === 0) {
-                return this._cabCarritoService.actualizarUno(+id, cabecera);
-              } else {
-                throw  new BadRequestException('Error en validacion');
-              }
+              return this._cabCarritoService.encontrarUno(+id);
             } else {
               throw  new BadRequestException('No posee permisos para realizar esta accion');
             }
+          },
+        )
+        .then(
+          value => {
+            value.direccion = direccion;
+            return this._cabCarritoService.actualizarUno(+id, value);
           },
         )
         .catch(
@@ -97,13 +99,66 @@ export class CabCarritoController {
     }
   }
 
+  @Post('/comprar/:id')
+  async comprarCabecera(
+    @Param('id') id: string,
+    @Session() session,
+  ): Promise<CabCarritoEntity | void> {
+    if (session.usuario !== undefined) {
+      return this.esPropietario(id, session)
+        .then(
+          async bandera => {
+            if (bandera) {
+              return this._cabCarritoService.encontrarUno(+id);
+            } else {
+              throw  new BadRequestException('No posee permisos para realizar esta accion');
+            }
+          },
+        )
+        .then(
+          value => {
+            const f = new Date();
+            value.estado = 'Comprado';
+            this.actualizarCabecera(+id);
+            value.fecha = `${f.getFullYear()}/${f.getMonth() + 1}/${f.getDate()}`;
+            this.crearCab('N/A', session);
+            return this._cabCarritoService.actualizarUno(+id, value);
+          },
+        )
+        .catch(
+          reason => {
+            throw new BadRequestException(reason);
+          },
+        );
+    } else {
+      throw  new BadRequestException('No Existe usuario logeado');
+    }
+  }
+
+  actualizarCabecera(
+    id: number,
+  ): Promise<CabCarritoEntity | void> {
+    return this._cabCarritoService.encontrarUno(+id)
+      .then(
+        async value => {
+          value.total = await this.getTotal(+id);
+          return this._cabCarritoService.actualizarUno(+id, value);
+        },
+      )
+      .catch(
+        reason => {
+          console.log(reason.toString());
+        },
+      );
+  }
+
   @Get()
   buscarCabeceras(
     @Session()session,
   ): Promise<CabCarritoEntity[]> {
     if (session.usuario !== undefined) {
       const id: number = session.usuario.id_usuario;
-      return this._cabCarritoService.buscar({ usuario: id },[], 0, 10, { fecha: 'DESC' });
+      return this._cabCarritoService.buscar({ usuario: id }, [], 0, 10, { fecha: 'DESC' });
     } else {
       throw new BadRequestException('No existe una sesion activa');
     }
@@ -122,7 +177,7 @@ export class CabCarritoController {
       });
       if (ban) {
         const id: number = session.usuario.id_usuario;
-        return this._cabCarritoService.buscar({ usuario: id }, [],0, 10, { fecha: 'DESC' });
+        return this._cabCarritoService.buscar({ usuario: id }, [], 0, 10, { fecha: 'DESC' });
       } else {
         throw new BadRequestException('No posee permisos para realizar esta accion');
       }
@@ -132,7 +187,7 @@ export class CabCarritoController {
   }
 
   private esPropietario(id, session): Promise<boolean> {
-    return this._cabCarritoService.buscar({ id:id, usuario: session.usuario.id_usuario })
+    return this._cabCarritoService.buscar({ id: id, usuario: session.usuario.id_usuario })
       .then(
         result => {
           let bandera = false;
@@ -159,12 +214,25 @@ export class CabCarritoController {
     return carritoDTO;
   }
 
-  private generarCabecera():CabCarritoEntity{
-    const f=new Date();
-    let cabecera=new CabCarritoEntity();
-    cabecera.fecha=`${f.getFullYear()}/${f.getMonth()+1}/${f.getDate()}`;
-    cabecera.total=0;
-    cabecera.estado="Creado";
+  private generarCabecera(): CabCarritoEntity {
+    const f = new Date();
+    let cabecera = new CabCarritoEntity();
+    cabecera.fecha = `${f.getFullYear()}/${f.getMonth() + 1}/${f.getDate()}`;
+    cabecera.total = 0;
+    cabecera.estado = 'Creado';
     return cabecera;
+  }
+
+  private getTotal(id: number): Promise<number> {
+    let total = 0;
+    return this._detCarritoService.buscar({ cab: id })
+      .then(
+        value => {
+          value.forEach(elemento => {
+            total += elemento.subtotal;
+          });
+          return total;
+        },
+      );
   }
 }

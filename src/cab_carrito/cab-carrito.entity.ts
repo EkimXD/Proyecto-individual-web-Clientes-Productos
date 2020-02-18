@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import { UsuarioEntity } from '../usuario/usuario.entity';
 import { DetCarritoEntity } from '../det_carrito/det-carrito.entity';
 
@@ -55,5 +55,6 @@ export class CabCarritoEntity {
     type => DetCarritoEntity,
     detalle=>detalle.cab
   )
+  @JoinTable()
   detalle:DetCarritoEntity[];
 }
