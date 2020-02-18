@@ -7,7 +7,7 @@ export class ProveedorEntity {
     @PrimaryGeneratedColumn({
         type:'int',
         unsigned:true,
-        name:'id_cliente',
+        name:'id_proveedor',
         comment:'identificador de la tabla proveedor'
     })
     id:number;
@@ -18,10 +18,10 @@ export class ProveedorEntity {
     @Column({
         type:'varchar',
         nullable:false,
-        name:'numero_cedula_cliente',
-        comment:'Numero de cedula del proveedor'
+        name:'numero_ruc_cliente',
+        comment:'Numero de ruc del proveedor'
     })
-    numeroCedula:string;
+    numeroRuc:string;
 
     @Index({
         unique:false
@@ -29,21 +29,10 @@ export class ProveedorEntity {
     @Column({
         type:'varchar',
         nullable:false,
-        name:'nombre_cliente',
+        name:'nombre_proveedor',
         comment:'Nombre del proveedor'
     })
     nombre:string;
-
-    @Index({
-        unique:false
-    })
-    @Column({
-        type:'varchar',
-        nullable:false,
-        name:'apellido_cliente',
-        comment:'Apellido del proveedor'
-    })
-    apellido:string;
 
     @Column({
         type:'varchar',
@@ -57,7 +46,7 @@ export class ProveedorEntity {
     @Column({
         type:'varchar',
         nullable:true,
-        name:'telefono_cliente',
+        name:'telefono_proveedor',
         comment:'Correo electronico del proveedor'
     })
     telefono:string;
@@ -65,18 +54,10 @@ export class ProveedorEntity {
     @Column({
         type:'varchar',
         nullable:true,
-        name:'observacion_cliente',
+        name:'observacion_proveedor',
         comment:'Observacion acerca del proveedor'
     })
     observacion:string;
-
-    @Column({
-        type:'varchar',
-        nullable:false,
-        name:'contrasena_cliente',
-        comment:'Contrasena del proveedor'
-    })
-    contrasena:string;
 
     @OneToMany(
         type=>ProductoEntity,

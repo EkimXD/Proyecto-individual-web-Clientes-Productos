@@ -40,8 +40,7 @@ export class CabCarritoService {
     skip: number = 0,
     take: number = 10,
     order: any = {
-      id: 'DESC',
-      nombre: 'ASC'
+      id: 'DESC'
     }
   ): Promise<CabCarritoEntity[]> {
     return this._repositorioCabCarrito

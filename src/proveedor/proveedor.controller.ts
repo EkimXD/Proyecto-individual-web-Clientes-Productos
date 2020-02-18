@@ -23,13 +23,8 @@ export class ProveedorController {
   async crearUsuario(
     @Body() cliente: ProveedorEntity,
   ): Promise<ProveedorEntity> {
-    let clienteDTO = new ProveedorCreateDto();
-    clienteDTO.nombre = cliente.nombre;
-    clienteDTO.apellido = cliente.apellido;
-    clienteDTO.cedula = cliente.numeroCedula;
-    clienteDTO.contrasena = cliente.contrasena;
-    clienteDTO.correo = cliente.correo;
-    const validacion=await validate(clienteDTO);
+
+    const validacion=await validate(this.proveedorDTO(cliente));
     console.log(validacion);
     if (validacion.length === 0) {
       try {
@@ -53,5 +48,12 @@ export class ProveedorController {
     }
   }
 
+  private proveedorDTO(cliente:ProveedorEntity):ProveedorCreateDto{
+    let clienteDTO = new ProveedorCreateDto();
+    clienteDTO.nombre = cliente.nombre;
+    clienteDTO.cedula = cliente.numeroRuc;
+    clienteDTO.correo = cliente.correo;
+    return clienteDTO;
+  }
 }
 

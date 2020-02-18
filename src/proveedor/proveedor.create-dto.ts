@@ -14,17 +14,7 @@ export class ProveedorCreateDto{
   nombre:string;
 
   @IsNotEmpty()
-  @MinLength(3)
-  @MaxLength(50)
-  apellido:string;
-
-  @IsNotEmpty()
   @IsEmail()
   correo:string;
-
-  @IsNotEmpty()
-  @MinLength(8)
-  contrasena:string;
-
 
 }

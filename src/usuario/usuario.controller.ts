@@ -75,6 +75,7 @@ export class UsuarioController {
                   id_usuario: result.id_usuario,
                   usuario: result.nick,
                   roles: arregloRoles,
+                  carritoAC:null
                 };
 
               } else {
@@ -110,7 +111,6 @@ export class UsuarioController {
   @Post()
   async crearUsuario(
     @Body() usuario: UsuarioEntity,
-    @Res() res,
   ) {
     const validacion = await validate(this.usuarioDTOtoGE(usuario));
     if (validacion.length === 0) {
@@ -119,6 +119,7 @@ export class UsuarioController {
       }, {
         id: 2,
       }];
+      console.log("aqui");
       await this._rolService.buscar(where)
         .then(
           resultado => {
@@ -132,11 +133,11 @@ export class UsuarioController {
             }
           },
         )
-        .then(
-          resultado=>{
-              //todo usuario creado
-          }
-        )
+        // .then(
+        //   resultado=>{
+        //       //todo usuario creado
+        //   }
+        // )
         .catch(
           error => {
             console.log(error);
