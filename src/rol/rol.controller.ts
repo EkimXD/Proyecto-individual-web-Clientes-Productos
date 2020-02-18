@@ -60,25 +60,25 @@ export class RolController {
         @Body() rol:RolEntity,
         @Session() session,
     ):Promise<RolEntity>{
-        let bandera:boolean=false;
-
-        session.usuario.roles.forEach(value=>{
-            if(value==="AD"){
-                bandera=true;
-            }
-        });
-
-        if(bandera){
-
-            const validadion=await validate(this.rolDTo(rol));
-            if(validadion.length===0){
-                return this._rolService.crearUno(rol);
+        if (session.usuario!==undefined){
+            let bandera:boolean=false;
+            session.usuario.roles.forEach(value=>{
+                if(value==="AD"){
+                    bandera=true;
+                }
+            });
+            if(bandera){
+                const validadion=await validate(this.rolDTo(rol));
+                if(validadion.length===0){
+                    return this._rolService.crearUno(rol);
+                }else{
+                    throw new BadRequestException('Error en validacion');
+                }
             }else{
-                throw new BadRequestException('Error en validacion');
+                throw new BadRequestException('No tiene permisos');
             }
-        }else{
-            console.log("No tiene permisos")
-            //todo no tienen permisos
+        }else {
+            throw new BadRequestException("No existe una sesion activa");
         }
 
     }
@@ -89,24 +89,25 @@ export class RolController {
       @Param("id") id:string,
       @Session() session,
     ):Promise<RolEntity>{
-        let bandera:boolean=false;
-
-        session.usuario.roles.forEach(value=>{
-            if(value==="AD"){
-                bandera=true;
-            }
-        });
-
-        if(bandera){
-            const validadion=await validate(this.rolDTo(rol));
-            if(validadion.length===0) {
-                return this._rolService.actualizarUno(+id, rol);
+        if (session.usuario!==undefined){
+            let bandera:boolean=false;
+            session.usuario.roles.forEach(value=>{
+                if(value==="AD"){
+                    bandera=true;
+                }
+            });
+            if(bandera){
+                const validadion=await validate(this.rolDTo(rol));
+                if(validadion.length===0) {
+                    return this._rolService.actualizarUno(+id, rol);
+                }else{
+                    throw new BadRequestException("Error validando");
+                }
             }else{
-                //todo error validando
+                throw new BadRequestException("No tiene permisos para realizar esta accion");
             }
         }else{
-            console.log("No tiene permisos")
-            //todo no tienen permisos
+            throw new BadRequestException("No existe una sesion activa");
         }
 
     }
@@ -116,19 +117,20 @@ export class RolController {
         @Param('id')id:string,
         @Session()session
     ):Promise<DeleteResult>{
-        let bandera:boolean=false;
-
-        session.usuario.roles.forEach(value=>{
-            if(value==="AD"){
-                bandera=true;
+        if (session.usuario!==undefined){
+            let bandera:boolean=false;
+            session.usuario.roles.forEach(value=>{
+                if(value==="AD"){
+                    bandera=true;
+                }
+            });
+            if(bandera){
+                return this._rolService.borrarUno(+id);
+            }else{
+                throw new BadRequestException("No posee permisos para realizar esta accion");
             }
-        });
-
-        if(bandera){
-            return this._rolService.borrarUno(+id);
         }else{
-            console.log("No tiene permisos")
-            //todo no tienen permisos
+            throw new BadRequestException("No existe una sesion activa");
         }
     }
 
