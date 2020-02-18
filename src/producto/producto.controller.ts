@@ -45,7 +45,7 @@ export class ProductoController {
           throw new BadRequestException('error en validacion');
         }
       } else {
-        throw new BadRequestException('No existe una sesion activa');
+        throw new BadRequestException('No posee permisos para realizar esta accion');
       }
     } else {
       throw new BadRequestException('No existe una sesion activa');
@@ -73,7 +73,7 @@ export class ProductoController {
           throw new BadRequestException('error en validacion');
         }
       } else {
-        throw new BadRequestException('No existe una sesion activa');
+        throw new BadRequestException('No posee permisos para realizar esta accion');
       }
     } else {
       throw new BadRequestException('No existe una sesion activa');
@@ -95,7 +95,7 @@ export class ProductoController {
       if (ban) {
         return this._productoService.borrarUno(+id);
       } else {
-        throw new BadRequestException('No existe una sesion activa');
+        throw new BadRequestException('No posee permisos para realizar esta accion');
       }
     } else {
       throw new BadRequestException('No existe una sesion activa');
