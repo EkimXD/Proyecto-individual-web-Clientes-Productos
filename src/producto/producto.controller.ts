@@ -5,7 +5,7 @@ import { ProductoService } from './producto.service';
 import { ProductoCreateDto } from './producto.create-dto';
 import { ProveedorEntity } from '../proveedor/proveedor.entity';
 import { ProveedorService } from '../proveedor/proveedor.service';
-import { DeleteResult } from 'typeorm';
+import { DeleteResult, Like } from 'typeorm';
 import { getValueOrDefault } from '@nestjs/cli/lib/compiler/helpers/get-value-or-default';
 
 @Controller('producto')
@@ -107,7 +107,7 @@ export class ProductoController {
   ): Promise<ProductoEntity[]> {
     let where={};
     if (producto!==undefined){
-      where={nombre:`%${producto}%`}
+      where={nombre:Like (`%${producto}%`)}
     }
     return this._productoService.buscar(where);
   }
