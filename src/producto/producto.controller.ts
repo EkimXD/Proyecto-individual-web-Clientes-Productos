@@ -67,7 +67,7 @@ export class ProductoController {
       if (ban) {
         const validacion = await validate(producto);
         if (validacion.length === 0) {
-          return this._productoService.crearUno(producto);
+          return this._productoService.actualizarUno(+id,producto);
         } else {
           throw new BadRequestException('error en validacion');
         }
