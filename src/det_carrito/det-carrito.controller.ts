@@ -7,6 +7,7 @@ import { validate } from 'class-validator';
 import { ProductoService } from '../producto/producto.service';
 import { CabCarritoEntity } from '../cab_carrito/cab-carrito.entity';
 import { DeleteResult } from 'typeorm';
+import { CabCarritoController } from '../cab_carrito/cab-carrito.controller';
 
 @Controller('det-carrito')
 export class DetCarritoController {
@@ -15,6 +16,7 @@ export class DetCarritoController {
     private readonly _detCarrito: DetCarritoService,
     private readonly _cabCarrito: CabCarritoService,
     private readonly _productoService: ProductoService,
+    private readonly _cabeceraControler:CabCarritoController,
   ) {
   }
 
@@ -41,17 +43,19 @@ export class DetCarritoController {
               detalle.subtotal = detalle.cantidad * detalle.precio;
               return this._cabCarrito.buscar({ usuario: id, estado: 'Creado' });
             }else{
-              throw new BadRequestException("error en validacion");
+              throw new BadRequestException("Error en validacion");
             }
           },
         )
         .then(
-          result => {
+          async result => {
             if (result.length > 0) {
               detalle.cab = result[0];
               return this._detCarrito.crearUno(detalle);
             }else {
-              throw new BadRequestException("No existe cabecera, cree una e intente denuevo");
+              await this._cabeceraControler.crearCab('N/A',session);
+              this.agregarDetalle(detalle,idProducto,session);
+              // throw new BadRequestException("No existe cabecera, cree una e intente denuevo");
             }
           },
         )

@@ -7,6 +7,7 @@ import { CabCarritoService } from '../cab_carrito/cab-carrito.service';
 import { CabCarritoEntity } from '../cab_carrito/cab-carrito.entity';
 import { ProductoService } from '../producto/producto.service';
 import { ProductoEntity } from '../producto/producto.entity';
+import { CabCarritoController } from '../cab_carrito/cab-carrito.controller';
 
 
 @Module({
@@ -28,6 +29,7 @@ import { ProductoEntity } from '../producto/producto.entity';
     DetCarritoService,
     CabCarritoService,
     ProductoService,
+    CabCarritoController,
   ],
   exports: [
     DetCarritoService,
