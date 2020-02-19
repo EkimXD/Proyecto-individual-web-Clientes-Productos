@@ -22,7 +22,6 @@ export class ProductoController {
     return 'producto';
   }
 
-  //todo solo admins pueden crear en individual
   @Post(':id')
   async crearProducto(
     @Body() producto: ProductoEntity,

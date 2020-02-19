@@ -100,18 +100,33 @@ export class UsuarioController {
   @Delete(':id')
   borrarUsusario(
     @Param('id') id: string,
+    @Session()session,
   ): Promise<DeleteResult> {
-    try {
-      return this._usuarioService.borrarUno(+id);
-    } catch (e) {
-      console.log(e);
+    if(session.usuario!==undefined){
+      let ban = false;
+      if(session.usuario.id_usuario==id){
+        ban=true;
+      }else {
+        session.usuario.roles.forEach(value => {
+          if (value == 'AD') {
+            ban = true;
+          }
+        });
+      }
+      if (ban){
+          return this._usuarioService.borrarUno(+id);
+      }else {
+        throw new BadRequestException("No posee permisos para realizar esta accion");
+      }
+    }else {
+      throw new BadRequestException("No existe sesion activa");
     }
   }
 
   @Post()
   async crearUsuario(
     @Body() usuario: UsuarioEntity,
-  ) {
+  ):Promise<UsuarioEntity|void> {
     const validacion = await validate(this.usuarioDTOtoGE(usuario));
     if (validacion.length === 0) {
       const where = [{
@@ -120,7 +135,7 @@ export class UsuarioController {
         id: 2,
       }];
       console.log("aqui");
-      await this._rolService.buscar(where)
+      return this._rolService.buscar(where)
         .then(
           resultado => {
             if (resultado.length >= 2) {
@@ -133,11 +148,6 @@ export class UsuarioController {
             }
           },
         )
-        // .then(
-        //   resultado=>{
-        //       //todo usuario creado
-        //   }
-        // )
         .catch(
           error => {
             console.log(error);
@@ -147,45 +157,38 @@ export class UsuarioController {
     } else {
       throw new BadRequestException(`Error validando \n${validacion}`);
     }
-
   }
 
   @Post(':id')
   async editarUsuario(
     @Body()usuario: UsuarioEntity,
     @Param('id')id: string,
-  ) {
-    try {
-      let validacion = await validate(this.usuarioDTOtoGE(usuario));
-      if (validacion.length == 0) {
-        this._usuarioService.actualizarUno(+id, usuario)
-          .then(
-            //todo hacer algo
-          )
-          .catch(
-            //todo hacer algo x2
-          );
-
-        // this._usuarioService.buscar({id_usuario:+id},['rol'])
-        //     .then(
-        //         resultado=>{
-        //             usuario.rol=resultado[0].rol;
-        //         }
-        //     )
-        //     .catch(
-        //         error=>{
-        //             console.log(error)
-        //         }
-        //     )
-      } else {
-        console.log('error en validacion');
-        //todo algo :v
+    @Session()session,
+  ):Promise<UsuarioEntity> {
+    if(session.usuario!==undefined){
+      let ban = false;
+      if(session.usuario.id_usuario==id){
+        ban=true;
+      }else {
+        session.usuario.roles.forEach(value => {
+          if (value == 'AD') {
+            ban = true;
+          }
+        });
       }
-
-    } catch (e) {
-      console.log(e);
+      if (ban){
+        let validacion = await validate(this.usuarioDTOtoGE(usuario));
+        if (validacion.length == 0) {
+          return this._usuarioService.actualizarUno(+id, usuario)
+        }else {
+          throw new BadRequestException("Error en validacion");
+        }
+      }else {
+        throw new BadRequestException("No posee permisos para realizar esta accion");
+      }
+    }else {
+      throw new BadRequestException("No existe sesion activa");
     }
-
   }
 
   @Get()
