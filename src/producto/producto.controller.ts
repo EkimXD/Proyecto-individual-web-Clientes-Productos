@@ -54,6 +54,7 @@ export class ProductoController {
             const validacion = await validate(this.productoDTO(producto));
             console.log(validacion);
             if (validacion.length === 0&&producto.costo>=0) {
+                console.log("entro52");
                 producto.proveedor = await this.usuario(+proveedor);
                 console.log("entro");
                 this._productoService.crearUno(producto);
@@ -187,7 +188,7 @@ export class ProductoController {
         }
     }
 
-    @Get('eliminar/:id')
+    @Get('/eliminar/:id')
     async borrarProducto(
         @Param('id') id: string,
         @Session()session,

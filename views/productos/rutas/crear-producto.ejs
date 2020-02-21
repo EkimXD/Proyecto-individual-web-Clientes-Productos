@@ -6,7 +6,7 @@
     <div class="alert alert-danger" role="alert"><%=datos.error%></div>
     <% } %>
 
-    <form action="/producto<%=datos.producto?`/${datos.producto.id}`:`?proveedor=${datos.proveedor}`%>"
+    <form action="/producto<%=datos.producto?"/"+datos.producto.id:"?proveedor="+datos.proveedor%>"
           method="POST"
     >
 
