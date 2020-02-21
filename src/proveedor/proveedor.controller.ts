@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Query, Req, Session } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Query, Req, Res, Session } from '@nestjs/common';
 import { ProveedorService } from './proveedor.service';
 import { ProveedorEntity } from './proveedor.entity';
 import { ProveedorCreateDto } from './proveedor.create-dto';
@@ -20,11 +20,57 @@ export class ProveedorController {
     return 'proveedor';
   }
 
+  @Get('/crear')
+  async crear(
+    @Query("error")error:string,
+    @Session()session,
+    @Res()res,
+  ) {
+    if (session.usuario !== undefined) {
+      let ban = false;
+      session.usuario.roles.forEach(value => {
+        if (value == 'AD') {
+          ban = true;
+        }
+      });
+      if (ban) {
+        res.render('proveedor/ruta/crear-proveedor', {
+          datos: {
+            titulo: 'Crear proveedor',
+            editable: true,
+            error,
+          },
+        });
+      } else {
+        res.render(
+          'rol/ruta/crear-rol',
+          {
+            datos:{
+              titulo:'No posee permisos para realizar esta accion',
+              editable:false
+            }
+          }
+        );
+      }
+    } else {
+      res.render(
+        'rol/ruta/crear-rol',
+        {
+          datos:{
+            titulo:'No existe una sesion activa',
+            editable:false
+          }
+        }
+      );
+    }
+  }
+
   @Post()
   async crearProveedor(
     @Body() proveedor: ProveedorEntity,
     @Session()session,
-  ): Promise<ProveedorEntity> {
+    @Res()res,
+  ) {
     if (session.usuario !== undefined) {
       let ban = false;
       session.usuario.roles.forEach(value => {
@@ -33,30 +79,49 @@ export class ProveedorController {
         }
       });
       if (ban) {
-        const validacion=await validate(this.proveedorDTO(proveedor));
+        const validacion = await validate(this.proveedorDTO(proveedor));
         console.log(validacion);
         if (validacion.length === 0) {
           try {
-            return this._proveedorService.crearUno(proveedor);
-          }catch (e) {
+            this._proveedorService.crearUno(proveedor);
+            res.redirect('/proveedor');
+          } catch (e) {
             console.log(e);
           }
         } else {
-          throw new BadRequestException('Error en validacion');
+          res.redirect('/proveedor/crear?error=Error en validacion');
         }
       } else {
-        throw new BadRequestException('No existe una sesion activa');
+        res.render(
+          'rol/ruta/crear-rol',
+          {
+            datos: {
+              titulo: 'No posee permisos para realizar esta accion',
+              editable: false
+            }
+          }
+        );
       }
     } else {
-      throw new BadRequestException('No existe una sesion activa');
+      res.render(
+        'rol/ruta/crear-rol',
+        {
+          datos:{
+            titulo:'No existe una sesion activa',
+            editable:false
+          }
+        }
+      );
+
     }
   }
 
-  @Delete(':id')
+  @Post('/eliminar/:id')
   eliminarCliente(
     @Param('id') idcliente: string,
     @Session()session,
-  ): Promise<DeleteResult> {
+    @Res()res,
+  ) {
     if (session.usuario !== undefined) {
       let ban = false;
       session.usuario.roles.forEach(value => {
@@ -65,36 +130,57 @@ export class ProveedorController {
         }
       });
       if (ban) {
-        return this._proveedorService.borrarUno(+idcliente);
+        this._proveedorService.borrarUno(+idcliente);
+        res.redirect('/proveedor')
       } else {
-        throw new BadRequestException('No existe una sesion activa');
+        res.render(
+          'rol/ruta/crear-rol',
+          {
+            datos:{
+              titulo:'Tiene permisos para realizar esta accion',
+              editable:false
+            }
+          }
+        );
       }
     } else {
-      throw new BadRequestException('No existe una sesion activa');
+      res.render(
+        'rol/ruta/crear-rol',
+        {
+          datos:{
+            titulo:'No existe una sesion activa',
+            editable:false
+          }
+        }
+      );
     }
   }
 
-  @Get(
-
-  )@Get()
-  listarProveedores(
-    @Query("proveedor") proveedor:string,
-  ): Promise<ProveedorEntity[]> {
-    let where={};
-    if (proveedor!==undefined){
-      where={nombre:`%${proveedor}%`}
+  @Get()
+  async listarProveedores(
+    @Query('proveedor') proveedor: string,
+    @Res()res,
+  ) {
+    let where = {};
+    if (proveedor !== undefined) {
+      where = { nombre: `%${proveedor}%` };
     }
-    return this._proveedorService.buscar(where);
+    const proveedores = await this._proveedorService.buscar(where,['producto']);
+    res.render('proveedor/ruta/buscar-mostrar-proveedor', {
+      datos: {
+        proveedor: proveedores,
+      },
+    });
   }
 
-  @Get(":id")
+  @Get(':id')
   buscarProveedor(
-    @Param("id") id:string,
+    @Param('id') id: string,
   ): Promise<ProveedorEntity> {
     return this._proveedorService.encontrarUno(+id);
   }
 
-  private proveedorDTO(cliente:ProveedorEntity):ProveedorCreateDto{
+  private proveedorDTO(cliente: ProveedorEntity): ProveedorCreateDto {
     let clienteDTO = new ProveedorCreateDto();
     clienteDTO.nombre = cliente.nombre;
     clienteDTO.cedula = cliente.numeroRuc;

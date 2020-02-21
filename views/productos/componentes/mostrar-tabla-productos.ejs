@@ -5,46 +5,54 @@
         <th scope="col"> <!-- table header -->
             ID
         </th>
-        <th scope="col">Ruc</th>
         <th scope="col">Nombre</th>
-        <th scope="col">Correo</th>
-        <th scope="col">Telefono</th>
+        <th scope="col">proveedor</th>
+        <th scope="col">Descripcion</th>
+        <th scope="col">Precio</th>
         <th scope="col">Acciones</th>
     </tr>
     </thead>
 
-    <%if (proveedor){%>
+    <%if (productos){%>
         <tbody>
-        <% proveedor.forEach(prov=>{%>
+        <% productos.forEach( (producto) => {%>
             <tr> <!-- table row -->
                 <th scope="row">
-                    <%= prov.id%>
+                    <%= producto.id%>
                 </th> <!-- table header -->
                 <td>
-                    <%= prov.numeroRuc%>
+                    <%= producto.nombre%>
+                </td>
+                <td>
+                    <%= producto.proveedor.nombre%>
                 </td> <!-- table detail -->
                 <td>
-                    <%= prov.nombre%>
+                    <%= producto.descripcion%>
                 </td> <!-- table detail -->
                 <td>
-                    <%= prov.correo%>
+                    <%= producto.costo%>
                 </td> <!-- table detail -->
                 <td>
-                    <%= prov.telefono%>
+                    <form action="/det-carrito?idproducto=<%= producto.id %>"
+                          method="post"
+                    >
+                        <button type="submit"
+                                class="btn btn-success">
+                            Comprar
+                        </button>
+                    </form>
                 </td> <!-- table detail -->
-
                 <td>
-                    <a href="/producto/rutas/crear-producto?proveedor=<%= prov.id %>">
+                    <a href="producto/<%= producto.id %>">
                         <button type="button"
                                 class="btn btn-info">
-                            Crear Producto
+                            Editar
                         </button>
                     </a>
                 </td> <!-- table detail -->
-                <%if (prov.producto.length===0){%>
                 <td>
-                    <form action="/proveedor/eliminar/<%= prov.id %>"
-                          method="post"
+                    <form action="/producto/eliminar/<%= producto.id %>"
+                          method="get"
                     >
                         <button type="submit"
                                 class="btn btn-danger">
@@ -52,7 +60,6 @@
                         </button>
                     </form>
                 </td> <!-- table detail -->
-                <%}%>
             </tr>
         <%}); %>
         </tbody> <!-- tbody -->

@@ -1,0 +1,104 @@
+<%- include('../../compartido/cabecera') %>
+
+<div class="container">
+
+    <% if(datos.error){ %>
+    <div class="alert alert-danger" role="alert"><%=datos.error%></div>
+    <% } %>
+
+    <form action="/proveedor/<%=datos.proveedor?datos.proveedor.id:""%>"
+          method="POST"
+    >
+
+        <div class="form-group">
+            <label for="nombreID">Ruc del proveedor</label>
+            <input id="nombreID"
+                   type="text"
+                   name="numeroRuc"
+                   placeholder="Ej: 1234567890"
+                   title="Ingresar ruc del proveedor"
+                   value="<%=datos.proveedor?datos.proveedor.numeroRuc:""%>"
+                   class="form-control">
+            <small id="nombreIDHelp"
+                   class="form-text text-muted">
+                Ingresa un numer de 10 numeros
+            </small>
+        </div>
+
+        <div class="form-group">
+            <label for="nombreID">Nombre</label>
+            <input id="nombreID"
+                   type="text"
+                   name="nombre"
+                   placeholder="Ej: DN Group"
+                   title="Ingresar nombre de proveedor"
+                   value="<%=datos.proveedor?datos.proveedor.nombre:""%>"
+                   class="form-control">
+            <small id="nombreIDHelp"
+                   class="form-text text-muted">
+                Ingresa un nombre mayor a 3 caracteres y menor a 50
+            </small>
+        </div>
+
+        <div class="form-group">
+            <label for="costoID">Correo</label>
+            <input id="costoID"
+                   step="any"
+                   type="text"
+                   name="correo"
+                   placeholder="Ej: lola@correo.com"
+                   value="<%=datos.proveedor!=undefined?datos.proveedor.correo:""%>"
+                   title="Ingresar correo"
+                   class="form-control">
+            <small id="costoIDHelp"
+                   class="form-text text-muted">
+                Ingrese correo del proveedor
+            </small>
+        </div>
+
+        <div class="form-group">
+            <label for="telefonoID">Telefono</label>
+            <input id="telefonoID"
+                   step="any"
+                   type="text"
+                   name="telefono"
+                   placeholder="Ej: lola@correo.com"
+                   value="<%=datos.proveedor!=undefined?datos.proveedor.telefono:""%>"
+                   title="Ingresar correo"
+                   class="form-control">
+            <small id="costoIDHelp"
+                   class="form-text text-muted">
+                Ingrese telefono del proveedor
+            </small>
+        </div>
+
+
+        <div class="form-group">
+            <label for="descripcionID">Observacion</label>
+            <input id="descripcionID"
+                   type="text"
+                   name="observacion"
+                   placeholder="Ej: Proveedor muy confiable"
+                   title="Ingresar Observacion del proveedor"
+                   value="<%=datos.proveedor?datos.proveedor.observacion:""%>"
+                   class="form-control">
+        </div>
+
+
+        <button type="submit"
+                class="btn btn-success">
+            <%=datos.proveedor?"Editar proveedor":"Crear proveedor"%>
+        </button>
+
+        <%if(!datos.proveedor){%>
+            <button type="reset"
+                    class="btn btn-secondary">
+                Limpiar formulario
+            </button>
+        <%}%>
+
+    </form>
+
+
+</div>
+

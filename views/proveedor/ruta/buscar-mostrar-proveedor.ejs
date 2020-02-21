@@ -1,0 +1,39 @@
+<%- include('../../compartido/cabecera') %>
+<div class="container">
+
+    <h1>Proveedores</h1>
+
+    <a href="/proveedor/crear">
+        <button type="button"
+                class="btn btn-primary">
+            Crear Proveedor
+        </button>
+    </a>
+
+
+    <form action="/proveedor"
+          method="GET"
+    >
+        <div class="form-group">
+            <label for="consultaID">Buscar proveedor:</label>
+            <input id="consultaID"
+                   type="text"
+                   name="proveedor"
+                   placeholder="Ej: AD Group"
+                   title="Ingresar la busqueda por nombre de proveedor"
+                   class="form-control">
+            <small id="cedulaIDHelp"
+                   class="form-text text-muted">
+                Puede buscar por nombre del proveedor.
+            </small>
+        </div>
+    </form>
+
+    <%if(datos.proveedor){%>
+        <%- include('../componentes/mostrar-tabla-proveedor',{
+        proveedor:datos.proveedor
+        })%>
+    <%}%>
+
+</div>
+

@@ -1,0 +1,38 @@
+<%- include('../compartido/cabecera')%>
+<div class="container">
+
+    <div class="container">
+        <div class="col-3 align-self-end">
+            <ul>
+                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"><%= user.nombre%></a>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a href="/usuario/ruta/mostrar-usuarios-uno/<%= user.id %>" class="dropdown-item">Editar Usuario</a>
+                    <a href="/proveedor" class="dropdown-item">Proveedores</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="/usuario/logout"class="dropdown-item">Logout</a>
+                </div>
+            </ul>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-8 align-self-center text-center">
+                <div class="card" style="width: 18rem;">
+                    <img src="https://www.marketingdirecto.com/wp-content/uploads/2019/07/retail-carrito-compra.jpg"
+                         class="card-img-top"
+                         >
+                    <div class="card-body">
+                        <a href="/producto" class="btn btn-primary">Ir a productos</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        </div>
+    </div>
+
+
+</div>
+
+
+<%- include('../compartido/pie-de-pagina')%>

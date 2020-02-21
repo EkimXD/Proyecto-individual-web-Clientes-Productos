@@ -30,6 +30,111 @@ export class UsuarioController {
     ) {
     }
 
+
+
+
+    @Get('ruta/mostrar-usuarios')
+    async rutaMostrarUsuarios(
+      @Query('mensaje') mensaje: string,
+      @Query('error') error: string,
+      @Query('consultaUsuario') consultaUsuario: string,
+      @Res() res,
+    ) {
+      let consultaServicio;
+      if (consultaUsuario) {
+        consultaServicio = [
+          {
+            nombre: Like('%' + consultaUsuario + '%'),
+          },
+        ];
+      }
+      const usuarios = await this._usuarioService.buscar(consultaServicio);
+      res.render(
+        'usuario/rutas/buscar-mostrar-usuario',
+        {
+          datos: {
+            // usuarios:usuarios -> nueva sintaxis,
+            mensaje,
+            usuarios,
+            error,
+          },
+        },
+      );
+    }
+
+    @Get('ruta/mostrar-usuarios-uno/:idUsuario')
+    async rutaUnMostrarUsuarios(
+      @Query('mensaje') mensaje: string,
+      @Query('error') error: string,
+      @Query('consultaUsuario') consultaUsuario: string,
+      @Param('idUsuario') idUsuario: string,
+      @Res() res,
+    ) {
+        const consulta = {
+            id_usuario: idUsuario,
+        };
+
+        try {
+            const arregloUsuarios = await this._usuarioService.buscar(consulta);
+            if (arregloUsuarios.length > 0) {
+                res.render(
+                  'usuario/rutas/crear-usuario',
+                  {
+                      datos: {error, usuario: arregloUsuarios[0]},
+                  },
+                );
+            } else {
+                res.redirect(
+                  '/usuario/ruta/mostrar-usuarios-uno?error=No existe ese usuario',
+                );
+            }
+        } catch (error) {
+            console.log(error);
+            res.redirect(
+              '/usuario/ruta/buscar-mostrar-uno?error=Error editando usuario',
+            );
+        }
+    }
+
+    @Get('ruta/editar-usuario/:idUsuario')
+    async rutaEditarUsuario(
+      @Query('error') error: string,
+      @Param('idUsuario') idUsuario: string,
+      @Res() res,
+    ) {
+        const consulta = {
+            id_usuario: idUsuario,
+        };
+        try {
+            const arregloUsuarios = await this._usuarioService.buscar(consulta);
+            if (arregloUsuarios.length > 0) {
+                res.render(
+                  'usuario/rutas/crear-usuario',
+                  {
+                      datos: {error, usuario: arregloUsuarios[0]},
+                  },
+                );
+            } else {
+                res.redirect(
+                  '/usuario/ruta/mostrar-usuarios?error=No existe ese usuario',
+                );
+            }
+        } catch (error) {
+            console.log(error);
+            res.redirect(
+              '/usuario/ruta/buscar-mostrar-usuarios?error=Error editando usuario',
+            );
+        }
+
+    }
+
+    @Get('categoria-productos')
+    rutaCategoriaProductos(
+      @Res() res,
+    ){
+        res.render('componentes/categoria-productos')
+    }
+
     @Get('login')
     rutaLogin(
         @Res() res,
@@ -39,9 +144,19 @@ export class UsuarioController {
 
     @Get('principal')
     rutaPrincipal(
+        @Session()session,
         @Res() res,
     ) {
-        res.render('componentes/principal')
+        let result:string = 'User';
+        if (session.usuario!=undefined){
+            result=session.usuario.usuario;
+        }
+        res.render('componentes/principal',{
+            user:{
+                id: null,
+                nombre: result
+            }
+        })
     }
 
     @Get('rutas/crear-usuario')
@@ -110,14 +225,16 @@ export class UsuarioController {
                                     roles: arregloRoles
                                 };
 
-                                res.render('usuario/principal?mensaje=Usuario logeado',
-                                    {
-                                        usuario: result.nick
-                                    })
+                                res.render('componentes/principal',{
+                                    user:{
+                                        id: result.id_usuario,
+                                        nombre: result.nick
+                                    }
+                                })
 
                             } else {
                                 console.log('Contrasena incorrecta');
-                                res.redirect('/inicio/login?error=Contrasena incorrecta',)
+                                res.redirect('/usuario/login?error=Contrasena incorrecta',)
                             }
                         } catch (e) {
                             console.log(e);
@@ -212,6 +329,7 @@ export class UsuarioController {
         @Body()usuario: UsuarioEntity,
         @Param('id')id: string,
         @Session()session,
+        @Res() res,
     ): Promise<UsuarioEntity | void> {
         if (session.usuario !== undefined) {
             let ban = false;
@@ -238,11 +356,17 @@ export class UsuarioController {
                                 value.apellido = usuario.apellido;
                                 value.nombre = usuario.nombre;
                                 return this._usuarioService.actualizarUno(+id, value);
+                                res.redirect(
+                                  '/usuario/rutas/mostrar-usuario-uno?mensaje=El usuario' + value.nick + ' actualizado'
+                                )
                             }
+
                         ).catch(
                             reason => {
                                 throw new BadRequestException(reason);
-                            }
+                                res.redirect('/usuario/rutas/editar-usuario' + id +'?error=Usuario no valido',);
+                            },
+
                         )
                 } else {
                     throw new BadRequestException("Error en validacion");
